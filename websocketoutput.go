@@ -92,7 +92,7 @@ func (wso *WebSocketsOutput) Init(config interface{}) error {
 func (wso *WebSocketsOutput) Run(or pipeline.OutputRunner, h pipeline.PluginHelper) error {
         for pc := range or.InChan() {
                 wso.broadcast <- pc.Message
-                pc.Zero()
+                pc.Recycle(nil)
         }
         return nil
 }
