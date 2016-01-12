@@ -15,6 +15,7 @@ type connection struct {
 
 type WebSocketsOutputConfig struct {
         Address string `toml:"address"`
+        Handler string `toml:"handler"`
 }
 
 type WebSocketsOutput struct {
@@ -26,7 +27,7 @@ type WebSocketsOutput struct {
 }
 
 func (wso *WebSocketsOutput) ConfigStruct() interface{} {
-        return &WebSocketsOutputConfig{":5000"}
+        return &WebSocketsOutputConfig{}
 }
 
 func (wso *WebSocketsOutput) Init(config interface{}) error {
@@ -34,7 +35,7 @@ func (wso *WebSocketsOutput) Init(config interface{}) error {
         wso.connections = make(map[*connection]struct{})
         wso.register = make(chan *connection)
         wso.unregister = make(chan *connection)
-        wso.broadcast = make(chan *message.Message, 256)
+        wso.broadcast = make(chan *message.Message, 1028)
 
         // Connections handler
         go func() {
@@ -62,8 +63,8 @@ func (wso *WebSocketsOutput) Init(config interface{}) error {
         }()
 
         // Websocket server and connection handler
-        http.Handle("/hekaout", websocket.Handler(func(ws *websocket.Conn) {
-                c := &connection{ws, make(chan *message.Message, 256)}
+        http.Handle(wso.conf.Handler, websocket.Handler(func(ws *websocket.Conn) {
+                c := &connection{ws, make(chan *message.Message, 1028)}
 
                 wso.register <- c
 
