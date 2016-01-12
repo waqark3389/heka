@@ -1,4 +1,4 @@
-package heka_websockets
+package heka_websockets_output
 
 import (
         "fmt"
