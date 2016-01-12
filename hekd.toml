@@ -1,0 +1,5 @@
+[WSDevwwwAccessOutput]
+type = "WebSocketsOutput"
+message_matcher = "Type == 'devhttpduseraccess'"
+address = "0.0.0.0:8080"
+handler = "/apacheerrors"
